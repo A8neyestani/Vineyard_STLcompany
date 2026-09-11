@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Training outputs and local artifacts
+runs/
+outputs/
+
+# Source datasets: download them separately instead of committing duplicate exports.
+STL2v1yolov8/
+STL.v5i.coco-segmentation/
+STL.v5i.png-mask-semantic/
+STL.v6i.coco-segmentation/
+
+# Model checkpoints and raw capture footage
+*.pt
+MAH03602.MP4
+
+# The lightweight, project-owned demo video is deliberately versioned.
+!assets/mar-rover-demo.mp4

@@ -1,0 +1,11 @@
+# Dataset configuration for the MAR Rover crop-row segmentation prototype.
+# Place the Roboflow YOLOv8 export in ../STL2v1yolov8 relative to this file.
+path: ../STL2v1yolov8
+train: train/images
+val: valid/images
+
+names:
+  0: plant
+  1: sky
+  2: soil
+  3: trunk
