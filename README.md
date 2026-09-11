@@ -2,7 +2,7 @@
 
 > A computer-vision prototype for helping an amphibious rover understand the space between orchard rows.
 
-[![Project demo](assets/mar-rover-demo-cover.jpg)](assets/mar-rover-demo.mp4)
+[![Eight-second animated preview of MAR Rover crop-row guidance](assets/mar-rover-demo-preview.gif)](assets/mar-rover-demo.mp4)
 
 This is a portfolio snapshot of my work with **SeTeL** on the MAR Rover: a multipurpose amphibious vehicle designed for environments that do not fit neatly into a road map. In this case, the goal was straightforward to describe and harder to solve well—give the rover enough visual context to keep to the soil path while respecting plants and trunks around it.
 
@@ -14,7 +14,8 @@ The model is a YOLOv8 segmentation model trained to separate four scene elements
 
 - A small, repeatable training entry point for the YOLOv8 segmentation workflow.
 - A command-line inference script for images and videos; results are written to disk rather than opened in a GUI.
-- A 63-second field demo from the project and its cover image above.
+- Image-space crop-row guidance that turns a soil mask into a visual centreline and lateral offset.
+- A 63-second field demo from the project; the animated preview above links to the full MP4.
 - The dataset configuration and notes needed to reproduce the class setup.
 
 The committed demo is meant to show the work, not to claim a production-ready autonomy stack. Vehicle control, sensor fusion, obstacle policy, and real-world safety validation are deliberately outside this repository.
@@ -37,6 +38,18 @@ python src/infer.py \
 For video inference, point `--source` at a local video. Add `--stride 2` (or higher) when a lower processing rate is more appropriate for the hardware.
 
 Annotated output is saved to `outputs/segmentation/`.
+### From segmentation to a visual route
+
+The original notebook runs semantic segmentation only. `src/row_guidance.py` keeps the ground-connected soil region, follows its centre through several horizontal scan lines, and returns a centreline plus a normalised lateral offset from the image centre.
+
+```bash
+python src/guide_image.py \
+  --weights path/to/your/last.pt \
+  --source assets/demo-frame.jpg \
+  --output outputs/row-guidance.jpg
+```
+
+This is **visual guidance**, not a motor-control loop. Turning this result into safe rover steering still needs camera calibration, a coordinate transform, sensor fusion, a speed-aware controller, and a hardware-specific safety interface.
 
 ## Dataset and training
 
@@ -57,7 +70,7 @@ The older `main.ipynb` is retained as the original exploratory notebook. The scr
 ```text
 assets/          Demo video and README preview
 configs/         Dataset configuration
-src/             Training and inference entry points
+src/             Training, inference, and image-space guidance entry points
 main.ipynb       Original exploration notebook
 ```
 
@@ -69,4 +82,4 @@ This prototype is for research and portfolio purposes. A segmentation prediction
 
 Built in collaboration with the team at [SeTeL](https://www.setelgroup.com/) for the MAR Rover project. The public project context and field demo were originally shared in [this LinkedIn post](https://www.linkedin.com/feed/update/urn:li:activity:7114639932651937792/).
 
-`assets/mar-rover-demo.mp4` and its cover image are project media from that post. Please obtain the appropriate permission before reusing them outside this portfolio context.
+`assets/mar-rover-demo.mp4`, its animated preview, and its cover image are project media from that post, shared here with SeTeL's permission.
